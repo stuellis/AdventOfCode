@@ -46,6 +46,8 @@ scratchcards = 0
 for c in num_of_copies:
     scratchcards += c
 
+
+## RESULTS ##
 result_line = '-' * 25
 print(result_line)
 print(' '*9 + "Results")

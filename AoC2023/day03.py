@@ -1,6 +1,6 @@
 import re
 
-GRIDY = 139
+NUM_OF_ROWS = 139
 
 def contains_symbol(line: str):
     symbol = "[^\d.]"
@@ -32,7 +32,7 @@ def part_1_check_number(num: str, line: int, start: int, end: int):
             return int(num)
     
     # search below
-    if line < GRIDY:
+    if line < NUM_OF_ROWS:
         below = grid[line+1][start-1:end+1]
         # print("v " + below)
         if contains_symbol(below):
@@ -43,15 +43,15 @@ def part_1_check_number(num: str, line: int, start: int, end: int):
 
 
 def adjust_gears(line: int, col: int, num: str):
-    gearRatio = 0
-    currentGear = gears[line][col]
-    if currentGear > 0:
-        gearRatio = currentGear * int(num)
+    gear_ratio = 0
+    current_gear_val = gears[line][col]
+    if current_gear_val > 0:
+        gear_ratio = current_gear_val * int(num)
         gears[line][col] = 0
     else:
         gears[line][col] = int(num)
     
-    return gearRatio
+    return gear_ratio
 
 
 def part_2_check_for_gears(num: str, line: int, start: int, end: int):
@@ -78,7 +78,7 @@ def part_2_check_for_gears(num: str, line: int, start: int, end: int):
             return adjust_gears(line-1, start-1+x, num)
 
     # search below
-    if line < GRIDY:
+    if line < NUM_OF_ROWS:
         below = grid[line+1][start-1:end+1]
         x = below.find("*")
         if x > -1:
@@ -94,50 +94,58 @@ lines = f.read().splitlines()
 grid = []
 for line in lines:
     # print(line)
+
     # pad each from with '.' at start and end to avoid edge detection
     line = "." + line + "."
     grid.append(line)
 
-sum = 0
-sumGearRatios = 0
+sum_of_part_nums = 0
+sum_of_gear_ratios = 0
 
-gears = [[0 for col in range(GRIDY+1+2)] for row in range(GRIDY+1)]
+gears = [[0 for col in range(NUM_OF_ROWS+1+2)] for row in range(NUM_OF_ROWS+1)]
 
-currentNum = ""
-checkNumber = False
+current_num = ""
+check_number = False
 
-lineNum = -1
+line_num = -1
 
 for line in grid:
-    lineNum += 1
-    charPos = -1
+    line_num += 1
+    char_pos = -1
 
-    print(str(lineNum) + "> " + line)
+    print(str(line_num) + "> " + line)
 
     for char in line:
-        charPos += 1
+        char_pos += 1
 
-        # print(" " + str(charPos) + "> " + char)
+        # print(" " + str(char_pos) + "> " + char)
         if char >= '0' and char <= '9':
-            checkNumber = True
-            currentNum += char
+            check_number = True
+            current_num += char
         else:
             # end of number
 
-            if checkNumber:
-                p1 = part_1_check_number(currentNum, lineNum, charPos-len(currentNum), charPos)
-                sum += p1
-                print("[check_number] " + currentNum + " >> " + str(p1))
+            if check_number:
+                p1 = part_1_check_number(current_num, line_num, char_pos-len(current_num), char_pos)
+                sum_of_part_nums += p1
+                print("[check_number] " + current_num + " >> " + str(p1))
                 
                 if p1 > 0:
-                    p2 = part_2_check_for_gears(currentNum, lineNum, charPos-len(currentNum), charPos)
+                    p2 = part_2_check_for_gears(current_num, line_num, char_pos-len(current_num), char_pos)
                     print("[check_for_gears] " + str(p2))
-                    sumGearRatios += p2
+                    sum_of_gear_ratios += p2
 
-            checkNumber = False
-            currentNum = ""
+            check_number = False
+            current_num = ""
 
-print("\n\n-------------\n   Results\n-------------")
-print(("Sum: {a}").format(a=sum))
-print(("Sum ratio: {a}").format(a=sumGearRatios))
+print()
 
+
+## RESULTS ##
+result_line = '-' * 33
+print(result_line)
+print(' '*13 + "Results")
+print(result_line)
+print((" Sum of Part Numbers: {sum:10,}").format(sum=sum_of_part_nums))
+print((" Sum of  Gear Ratios: {sum:10,}").format(sum=sum_of_gear_ratios))
+print(result_line)

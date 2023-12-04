@@ -1,54 +1,65 @@
 import re
 
-FINALRED = 12
-FINALGREEN = 13
-FINALBLUE = 14
+FINAL_RED = 12
+FINAL_GREEN = 13
+FINAL_BLUE = 14
 
 # SUM for PART 1
-idSum = 0
+id_sum = 0
 
 # SUM for PART 2
-powerSum = 0
+power_sum = 0
 
 f = open("input_02.txt", 'r')
 lines = f.read().splitlines()
 
 for line in lines:
-    # print(line)
+    print(line)
 
-    x = line.split(":")
-    game = x[0]
-    results = x[1]
+    parts = line.split(":")
+    game_num = parts[0]
+    results = parts[1]
     
     pulls = results.split(";")
 
-    maxRed = 0
-    maxGreen = 0
-    maxBlue = 0
+    max_red = 0
+    max_green = 0
+    max_blue = 0
 
     for pull in pulls:
         # print(pull)
 
         res = re.search("(\d+) red", pull)
         if res:
-            maxRed = max(maxRed, int(res.group(1)))
+            max_red = max(max_red, int(res.group(1)))
         
         res = re.search("(\d+) green", pull)
         if res:
-            maxGreen = max(maxGreen, int(res.group(1)))
+            max_green = max(max_green, int(res.group(1)))
         
         res = re.search("(\d+) blue", pull)
         if res:
-            maxBlue = max(maxBlue, int(res.group(1)))
+            max_blue = max(max_blue, int(res.group(1)))
+
+    print(("  Max :: Red {r}, Green {g}, Blue {b}").format(r=max_red, g=max_green, b=max_blue))
 
     # PART 1
-    if maxRed <= FINALRED and maxGreen <= FINALGREEN and maxBlue <= FINALBLUE:
-        res = re.search("Game (\d+)", game)
+    if max_red <= FINAL_RED and max_green <= FINAL_GREEN and max_blue <= FINAL_BLUE:
+        res = re.search("Game (\d+)", game_num)
         if res:
-            idSum += int(res.group(1))
+            id_sum += int(res.group(1))
 
     # PART 2
-    powerSum += maxRed * maxGreen * maxBlue
+    power_sum += max_red * max_green * max_blue
 
-print(("ID Sum: {s}").format(s=idSum))
-print(("Power Sum: {s}").format(s=powerSum))
+    print()
+
+
+## RESULTS ##
+result_line = '-' * 23
+print(result_line)
+print(' '*8 + "Results")
+print(result_line)
+print(("   Game ID Sum: {id:6,}").format(id=id_sum))
+print((" Set Power Sum: {power:6,}").format(power=power_sum))
+print(result_line)
